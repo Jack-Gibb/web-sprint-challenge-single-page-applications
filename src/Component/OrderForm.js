@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const OrderForm = () => {
     const [name, setName] = useState('');
@@ -44,10 +45,32 @@ const OrderForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log('Name:', name);
-        console.log('Size:', size);
-        console.log('Toppings:', toppings);
-        console.log('Special Instructions:', specialInstructions);
+        const formData = {
+            name: name,
+            size: size,
+            toppings: Object.keys(toppings).filter((topping) => toppings[topping]),
+            specialInstructions: specialInstructions,
+        };
+
+        axios
+        .post('https://reqres.in/api/orders', formData)
+        .then((response) => {
+            console.log('Order Submitted', response.data);
+            
+            setName('');
+            setSize('');
+            setToppings({
+                pig: false,
+                cow: false,
+                vegetable: false, 
+                fungus: false,
+                fruit: false,
+            });
+            setSpecialInstructions('');
+        })
+        .catch((error) => {
+            console.error('Error submitting order:', error)
+        })
     };
 
     return (
@@ -64,7 +87,7 @@ const OrderForm = () => {
                 {nameError && <div>{nameError}</div>}
 
                 <label htmlFor="size-dropdown">Size:</label>
-                <select id="size=dropdown" value={size} onChange={chooseSize}>
+                <select id="size-dropdown" value={size} onChange={chooseSize}>
                     <option value="bite-sized">Bite Sized</option>
                     <option value="better">Better</option>
                     <option value="stuffed">Stuffed</option>
