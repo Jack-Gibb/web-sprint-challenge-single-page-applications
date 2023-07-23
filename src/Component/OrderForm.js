@@ -110,7 +110,7 @@ const OrderForm = () => {
                 onChange={chooseToppings}
                 />
                 </div>
-
+                
                 <div>
                 <label htmlFor="fruit">Fruit</label>
                 <input 
